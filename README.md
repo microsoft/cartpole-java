@@ -108,5 +108,79 @@ else if(registrationResponse.getClass() == SimulatorSessionResponse.class)
     //this is required
     sessionId = sessionResponse.sessionId();
 }
+
 System.out.println(java.time.LocalDateTime.now() + " - registered session " + sessionId);
+```
+
+## Control loop
+After registering an receiving a session ID, the following can be used to check the events that are received from the service in the control loop:
+
+```java
+// build the SimulatorState object
+SimulatorState sim_state = new SimulatorState();
+sim_state.withSequenceId(sequence_id); //required
+sim_state.withSessionId(sessionId); //required
+sim_state.withState(model.getState()); //required
+sim_state.withHalted(model.halted()); //required
+
+//advance only returns an object, so we need to check what type of object
+Object response = client.sessions().advance(workspaceName, sessionId, sim_state);
+
+// if we get an error during advance
+if(response.getClass() == ProblemDetails.class)
+{
+    ProblemDetails details = (ProblemDetails)response;
+    
+    System.out.println(java.time.LocalDateTime.now() + " - ProblemDetails - " +  details.title());
+}
+// succesful advance
+else if(response.getClass() == Event.class)
+{
+
+    Event event = (Event) response;
+    System.out.println(java.time.LocalDateTime.now() + " - received event: " + event.type());
+    sequence_id = event.sequenceId(); // get the sequence from the result
+
+    //now check the type of event and handle accordingly
+
+    if(event.type() == EventTypesEventType.EPISODE_START)
+    {
+        // ignored event in Cartpole
+        CartPoleConfig config = new CartPoleConfig();
+        //model.start(event.episodeStart().config());
+        
+    }
+    else if(event.type() == EventTypesEventType.EPISODE_STEP)
+    {
+        CartPoleAction action = new CartPoleAction();
+        
+        // action() returns an Object with a class value of LinkedHashMap
+        LinkedHashMap map = (LinkedHashMap) event.episodeStep().action(); 
+        
+        // get the value of the action 
+        Object theCommand = map.get("command");
+
+        //sometimes that value is an integer -- somtimes its a double. in either case, CartPoleAction.command is a double
+        if(theCommand.getClass() == Integer.class)
+            action.command  = ((Integer)theCommand).doubleValue();
+        else if (theCommand.getClass() == Double.class)
+            action.command  = ((Double)theCommand).doubleValue();
+
+        // move the model forward
+        model.step(action);
+    }
+    else if(event.type() == EventTypesEventType.EPISODE_FINISH)
+    {
+        System.out.println("Episode Finish");
+    }
+    else if(event.type() == EventTypesEventType.IDLE)
+    {
+        Thread.sleep(event.idle().callbackTime().longValue() *  1000);
+    }
+    else if (event.type() == EventTypesEventType.UNREGISTER)
+    {
+        client.sessions().delete(workspaceName, sessionId);
+    }
+}
+
 ```
