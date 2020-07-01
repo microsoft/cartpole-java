@@ -1,4 +1,4 @@
-package microsoft.bonsai.simulatorapi;
+package microsoft.bonsai.simulatorapi.sim;
 
 import java.util.Random;
 
