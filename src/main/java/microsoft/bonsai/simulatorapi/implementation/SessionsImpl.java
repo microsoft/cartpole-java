@@ -7,7 +7,8 @@
 package microsoft.bonsai.simulatorapi.implementation;
 
 import retrofit2.Retrofit;
-import microsoft.bonsai.simulatorapi.Sessions;
+
+import microsoft.bonsai.simulatorapi.*;
 import com.google.common.reflect.TypeToken;
 import com.microsoft.rest.RestException;
 import com.microsoft.rest.ServiceCallback;
@@ -16,12 +17,7 @@ import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
 import java.io.IOException;
 import java.util.List;
-import microsoft.bonsai.simulatorapi.models.Event;
-import microsoft.bonsai.simulatorapi.models.ProblemDetails;
-import microsoft.bonsai.simulatorapi.models.SimulatorInterface;
-import microsoft.bonsai.simulatorapi.models.SimulatorSessionResponse;
-import microsoft.bonsai.simulatorapi.models.SimulatorSessionSummary;
-import microsoft.bonsai.simulatorapi.models.SimulatorState;
+import microsoft.bonsai.simulatorapi.models.*;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

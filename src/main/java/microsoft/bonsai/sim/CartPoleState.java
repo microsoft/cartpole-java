@@ -1,4 +1,4 @@
-package microsoft.bonsai.simulatorapi.sim;
+package microsoft.bonsai.sim;
 
 public class CartPoleState  {
 

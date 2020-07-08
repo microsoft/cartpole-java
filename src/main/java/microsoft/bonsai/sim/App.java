@@ -1,4 +1,4 @@
-package microsoft.bonsai.simulatorapi.sim;
+package microsoft.bonsai.sim;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -6,7 +6,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import com.microsoft.rest.RestClient;
+import com.microsoft.rest.ServiceResponseBuilder;
+
 import microsoft.bonsai.simulatorapi.*;
+import microsoft.bonsai.client.*;
 import microsoft.bonsai.simulatorapi.implementation.*;
 import microsoft.bonsai.simulatorapi.models.*;
 import com.microsoft.rest.serializer.JacksonAdapter;
@@ -18,10 +21,10 @@ import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpMethod;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.rest.*;
+
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -34,29 +37,23 @@ public class App {
        
     }
 
-    private static void trainAndAssess() throws InterruptedException {
-        CartPoleModel model = new CartPoleModel();
-
+    private static void trainAndAssess() throws InterruptedException,IllegalArgumentException,Exception {
         int sequenceId = 1;
         String workspaceName = getWorkspace();
         String accessKey = getAccessKey();
-        String baseUrl = "https://api.bons.ai/";
+      
+        BonsaiClientConfig bcConfig = new BonsaiClientConfig(workspaceName,true);
+        
+        BonsaiClient client = new BonsaiClient(bcConfig);
+
+        CartPoleModel model = new CartPoleModel();
 
         // object that indicates if we have registered successfully
         Object registered = null;
         String sessionId = "";
 
         // we need to add an authorization header for the access key, so we need to
-        // build a rest client
-        RestClient rc = new RestClient.Builder().withBaseUrl(baseUrl).withSerializerAdapter(new JacksonAdapter())
-                .withResponseBuilderFactory(new ServiceResponseBuilder.Factory()).build();
-
-        // add the Authorization header
-        rc.headers().addHeader("Authorization", accessKey);
-
-        // using the Swagger-generated client
-        SimulatorAPIImpl client = new SimulatorAPIImpl(rc);
-
+        
         while (true) {
             // go through the registration process
             if (registered == null) {
@@ -68,7 +65,7 @@ public class App {
                 sim_interface.withCapabilities(null);
 
                 // minimum required
-                sim_interface.withSimulatorContext("{}");
+                sim_interface.withSimulatorContext(bcConfig.simulatorContext);
 
                 // create only returns an object, so we need to check what type of object
                 Object registrationResponse = sessions.create(workspaceName, sim_interface);
@@ -190,6 +187,7 @@ public class App {
         }
     }
 
+    
     private static String getWorkspace() {
 
 		if (System.getenv("SIM_WORKSPACE") != null) {
@@ -207,5 +205,5 @@ public class App {
 
 		return "<ACCESS_KEY>";
 	}
-
+    
 }
