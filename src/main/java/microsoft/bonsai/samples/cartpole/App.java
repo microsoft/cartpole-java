@@ -7,7 +7,14 @@ import microsoft.bonsai.simulatorapi.*;
 import microsoft.bonsai.client.*;
 import microsoft.bonsai.simulatorapi.models.*;
 
-import com.fasterxml.jackson.databind.*;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.client.util.StringContentProvider;
+import org.eclipse.jetty.http.HttpMethod;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -19,7 +26,7 @@ public class App {
         if (args.length == 0) {
             trainAndAssess();
         } else if (args[0] == "predict") {
-            runPrediction();
+            runPrediction(args[1]);
         }
        
     }
@@ -144,20 +151,21 @@ public class App {
         }
     }
 
-    private static void runPrediction() throws Exception
+    /** calls an exported brain for predictions (different control loop) */
+    private static void runPrediction(String predictionurl) throws Exception
     {
         Model model = new Model();
-        String predictionurl = "http://cp-java.azurewebsites.net/v1/prediction"; //replace with the url of your exported brain
-
+        
         HttpClient httpClient = new HttpClient();
         httpClient.start();
+        ObjectMapper mapper = new ObjectMapper();
 
         while(true)
         {
-        
-            ObjectMapper mapper = new ObjectMapper();
+            // get the state from the model
             String json = mapper.writeValueAsString(model.getState());
             
+            //see the request
             System.out.println(json);
 
             Request request = httpClient.newRequest(predictionurl)
@@ -170,11 +178,13 @@ public class App {
 
             String jsonResponse = response.getContentAsString();
 
+            //see the response
             System.out.println(jsonResponse);
             
             JavaType type = mapper.getTypeFactory().constructType(Action.class);
             Action action = mapper.readValue(jsonResponse, type);
 
+            // pass the response action to the model
             model.step(action);
     
         }
