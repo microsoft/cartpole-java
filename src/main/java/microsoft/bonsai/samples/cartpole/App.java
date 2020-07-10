@@ -7,14 +7,7 @@ import microsoft.bonsai.simulatorapi.*;
 import microsoft.bonsai.client.*;
 import microsoft.bonsai.simulatorapi.models.*;
 
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
-import org.eclipse.jetty.client.api.Request;
-import org.eclipse.jetty.client.util.StringContentProvider;
-import org.eclipse.jetty.http.HttpMethod;
-
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
 
 
 /**

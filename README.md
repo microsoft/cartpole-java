@@ -5,10 +5,6 @@ The focus of the example is the connection between a model in Java and the Bonsa
 
 # Structure
 
-The Swagger-generated Bonsai client is in `src/main/java/microsoft/bonsai/simulatorapi` and its child directories. 
-
-The CartPole model, state, action and config files are also in `src/main/java/microsoft/bonsai/simulatorapi` and packaged with the client for this example.
-
 The main entry point is App.java.
 
 # References
@@ -26,6 +22,16 @@ The Swagger generated client requires a few dependencies be added to the pom.xml
     <artifactId>guava</artifactId>
     <version>29.0-jre</version>
 </dependency>
+
+<!-- bonsai reference -->
+<dependency>
+    <groupId>microsoft.bonsai.simulatorapi</groupId>
+    <artifactId>bonsai-sdk</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${pom.basedir}/lib/bonsai-sdk-1.0.jar</systemPath>
+</dependency>
+
 ```
 
 # App.java 
@@ -36,12 +42,14 @@ The main interaction between the model and Bonsai happens in App.java.
 The following imports need to be included:
 
 ```java
+
 import java.util.LinkedHashMap;
-import com.microsoft.rest.RestClient;
-import microsoft.bonsai.simulatorapi.implementation.*;
+
+import microsoft.bonsai.simulatorapi.*;
+import microsoft.bonsai.client.*;
 import microsoft.bonsai.simulatorapi.models.*;
-import com.microsoft.rest.serializer.JacksonAdapter;
-import com.microsoft.rest.*;
+
+import com.fasterxml.jackson.databind.*;
 ```
 
 ## Client configuration
@@ -54,24 +62,9 @@ It should be noted that this example is using access keys to connect to the plat
 int sequence_id = 1;
 String workspaceName = "<WORKSPACE>";
 String accessKey = "<ACCESS_KEY>";
-String baseUrl = "https://api.bons.ai/";
 
-// object that indicates if we have registered successfully
-Object registered = null;
-String sessionId = "";
-
-//we need to add an authorization header for the access key, so we need to build a rest client
-RestClient rc = new RestClient.Builder()
-                                .withBaseUrl(baseUrl)
-                                .withSerializerAdapter(new JacksonAdapter())        
-                                .withResponseBuilderFactory(new ServiceResponseBuilder.Factory())                                                    
-                                .build();
-
-// add the Authorization header 
-rc.headers().addHeader("Authorization", accessKey);
-
-// using the Swagger-generated client
-SimulatorAPIImpl client = new SimulatorAPIImpl(rc);
+BonsaiClientConfig bcConfig = new BonsaiClientConfig(workspaceName,accessKey);
+BonsaiClient client = new BonsaiClient(bcConfig);
 
 ```
 
@@ -117,68 +110,59 @@ After registering an receiving a session ID, the following can be used to check 
 
 ```java
 // build the SimulatorState object
-SimulatorState sim_state = new SimulatorState();
-sim_state.withSequenceId(sequence_id); //required
-sim_state.withSessionId(sessionId); //required
-sim_state.withState(model.getState()); //required
-sim_state.withHalted(model.halted()); //required
+SimulatorState simState = new SimulatorState();
+simState.withSequenceId(sequenceId); // required
+simState.withState(model.getState()); // required
+simState.withHalted(model.halted()); // required
 
-//advance only returns an object, so we need to check what type of object
-Object response = client.sessions().advance(workspaceName, sessionId, sim_state);
+// advance only returns an object, so we need to check what type of object
+Object response = client.sessions().advance(workspaceName, sessionId, simState);
 
 // if we get an error during advance
-if(response.getClass() == ProblemDetails.class)
-{
-    ProblemDetails details = (ProblemDetails)response;
-    
-    System.out.println(java.time.LocalDateTime.now() + " - ProblemDetails - " +  details.title());
+if (response.getClass() == ProblemDetails.class) {
+    ProblemDetails details = (ProblemDetails) response;
+
+    System.out.println(java.time.LocalDateTime.now() + " - ProblemDetails - " + details.title());
 }
 // succesful advance
-else if(response.getClass() == Event.class)
-{
+else if (response.getClass() == Event.class) {
 
     Event event = (Event) response;
     System.out.println(java.time.LocalDateTime.now() + " - received event: " + event.type());
-    sequence_id = event.sequenceId(); // get the sequence from the result
+    sequenceId = event.sequenceId(); // get the sequence from the result
 
-    //now check the type of event and handle accordingly
+    // now check the type of event and handle accordingly
 
-    if(event.type() == EventTypesEventType.EPISODE_START)
-    {
+    if (event.type() == EventType.EPISODE_START) {
         // ignored event in Cartpole
-        CartPoleConfig config = new CartPoleConfig();
-        //model.start(event.episodeStart().config());
-        
-    }
-    else if(event.type() == EventTypesEventType.EPISODE_STEP)
-    {
-        CartPoleAction action = new CartPoleAction();
-        
+        Config config = new Config();
+
+        // If you have config values, pass them to the start event on your model:
+            // model.start(event.episodeStart().config());
+
+    } else if (event.type() == EventType.EPISODE_STEP) {
+        Action action = new Action();
+
         // action() returns an Object with a class value of LinkedHashMap
-        LinkedHashMap map = (LinkedHashMap) event.episodeStep().action(); 
-        
-        // get the value of the action 
+        LinkedHashMap map = (LinkedHashMap) event.episodeStep().action();
+
+        // get the value of the action
         Object theCommand = map.get("command");
 
-        //sometimes that value is an integer -- somtimes its a double. in either case, CartPoleAction.command is a double
-        if(theCommand.getClass() == Integer.class)
-            action.command  = ((Integer)theCommand).doubleValue();
+        // sometimes that value is an integer -- somtimes its a double. in either case,
+        // Action.command is a double
+        if (theCommand.getClass() == Integer.class)
+            action.command = ((Integer) theCommand).doubleValue();
         else if (theCommand.getClass() == Double.class)
-            action.command  = ((Double)theCommand).doubleValue();
+            action.command = ((Double) theCommand).doubleValue();
 
         // move the model forward
         model.step(action);
-    }
-    else if(event.type() == EventTypesEventType.EPISODE_FINISH)
-    {
+    } else if (event.type() == EventType.EPISODE_FINISH) {
         System.out.println("Episode Finish");
-    }
-    else if(event.type() == EventTypesEventType.IDLE)
-    {
-        Thread.sleep(event.idle().callbackTime().longValue() *  1000);
-    }
-    else if (event.type() == EventTypesEventType.UNREGISTER)
-    {
+    } else if (event.type() == EventType.IDLE) {
+        Thread.sleep(event.idle().callbackTime().longValue() * 1000);
+    } else if (event.type() == EventType.UNREGISTER) {
         client.sessions().delete(workspaceName, sessionId);
     }
 }
