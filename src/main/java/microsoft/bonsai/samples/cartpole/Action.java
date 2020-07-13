@@ -5,7 +5,7 @@ package microsoft.bonsai.samples.cartpole;
  */
 public class Action  
 {
-	// there is a value called 'command' in the action in inkling
+	// there is a value called 'command' in the action type in inkling
 	public double command = 0;
 	
 }

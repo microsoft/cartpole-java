@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+  sim:
+    image: bonsai-cartpole-java
+    environment:
+      - SIM_WORKSPACE=998edb0d-525c-4858-9a80-dce2153e0ed0
+      - SIM_ACCESS_KEY=YzMxYjYyMzA4N2YxNDE0NWJiNDFkNmNiMTUwZTQzYzc6OTBhZWNjY2ItY2ZjYy00YzViLTlmNTItZmFmOTRiNDA0Yjk3
+      - SIM_API_HOST=https://api.bons.ai
+    tty: true
+
+
+
+    

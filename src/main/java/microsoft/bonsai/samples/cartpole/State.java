@@ -1,7 +1,9 @@
 package microsoft.bonsai.samples.cartpole;
 
+/**
+ * The State class maps to the state values in inkling. 
+ */
 public class State  {
-
 	
 	public double cart_position;
 	public double cart_velocity;

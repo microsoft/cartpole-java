@@ -16,19 +16,6 @@ public class Model {
 	static double TRACK_WIDTH = 1.0; // m
 	static double FORCE_NOISE = 0.02; // % of FORCE_MAG
 
-	//static double THETA_LIMIT = (12 * 2 * Math.PI) / 360; // 12deg in radians
-
-	double x = 0; // cart position (m)
-	double x_dot = 0; // cart velocity (m/s)
-	//double theta = 0; // cart angle (rad)
-	//double theta_dot = 0; // cart angular velocity (rad/s)
-	double x_target = 0; // target pole position (m)
-	double x_limit = TRACK_WIDTH / 2; // full track
-	double x_delta = 0; // distance between target and pole position (m)
-	double x_pole = 0; // pole position (m)
-	double y_pole = 0; // height of pol COG (m)
-	double x_pole_dot = 0; // pole velocity (m/s)
-
 	double cart_position;
 	double cart_velocity;
 	double pole_angle;

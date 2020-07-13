@@ -9,13 +9,15 @@
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"
+            // ,"args":"predict"
         },
         {
             "type": "java",
             "name": "Debug (Launch)-App<bonsai-sdk3>",
             "request": "launch",
             "mainClass": "microsoft.bonsai.simulatorapi.App",
-            "projectName": "bonsai-sdk3"
+           
+            "projectName": "microsoft.bonsai.samples"
         }
     ]
 }

@@ -1,0 +1,5 @@
+FROM openjdk:11-jdk
+
+COPY lib/microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar /app/microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar
+
+CMD ["java","-jar","/app/microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar"]

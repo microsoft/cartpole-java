@@ -1,5 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
     "java.dependency.syncWithFolderExplorer": true,
     "java.dependency.packagePresentation": "hierarchical"
 }
