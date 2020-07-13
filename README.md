@@ -1,35 +1,32 @@
 # CartPole Java
-This example demonstrates using the classic CartPole example in Java. It assumes the default inkling when the user creates a CartPole example in Bonsai.
+This example demonstrates using the classic CartPole example in Java. It assumes the default inkling when the user creates a CartPole example in the Bonsai dashboard.
 
 The focus of the example is the connection between a model in Java and the Bonsai platform. 
+
 
 # Structure
 
 The main entry point is App.java.
 
 # References
+This example makes us of the Bonsai client for Java, available <here>.
 
-The Swagger generated client requires a few dependencies be added to the pom.xml file:
+Download the example project, then run:
 
 ```
-<dependency>
-    <groupId>com.microsoft.rest</groupId>
-    <artifactId>client-runtime</artifactId>
-    <version>1.7.5</version>
-</dependency>
-<dependency>
-    <groupId>com.google.guava</groupId>
-    <artifactId>guava</artifactId>
-    <version>29.0-jre</version>
-</dependency>
+mvn install 
+```
 
+in the root directory where the `pom.xml` file exists. This installs in your local Maven repository and makes it available for the CartPole example to use.
+
+References are managed in the pom.xml file:
+```
 <!-- bonsai reference -->
 <dependency>
-    <groupId>microsoft.bonsai.simulatorapi</groupId>
+    <groupId>microsoft.bonsai</groupId>
     <artifactId>bonsai-sdk</artifactId>
     <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${pom.basedir}/lib/bonsai-sdk-1.0.jar</systemPath>
+    <scope>compile</scope>
 </dependency>
 
 ```
@@ -168,3 +165,36 @@ else if (response.getClass() == Event.class) {
 }
 
 ```
+
+# Package
+
+You can run `mvn package` from the command prompt in the directory where the `pom.xml` file exists. This will create the target\microsoft.bonsai.samples.cartpole-1.0.jar and target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar files. The microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar file is a single jar file that contains all of the needed references to run.
+
+# Run Local
+
+After packaging the app, run:
+
+```
+java -jar target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar
+```
+
+If you want to run in prediction, run:
+
+```
+java -jar target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar predict
+```
+
+# Containerize
+This example also includes steps to containerize and scale the training of the simulator.
+
+From the command prompt in the `docker` folder, run:
+
+```
+build-docker.bat <docker_image_name> <azure_acr_name>
+```
+
+This will copy the JAR file over, build a docker container, prompt for a login to the Azure Container Registry, tag, and push your container to it.
+
+You can now register the simulator with Bonsai.
+
+Be sure to update the package statement in your inkling code.
