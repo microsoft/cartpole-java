@@ -38,13 +38,20 @@ public class Model {
 		target_pole_position = 0;
 	}
 
+	public void start(Config config)
+	{
+		reset();
+
+		//use values from config to set initial conditions (if applicable)
+	}
+
 	public void step(Action action) {
 		double command = action.command;
 
-		double min = -0.2;
-		double max = 0.2;
+		double min = -0.02;
+		double max = 0.02;
 
-		double rand = min + new Random().nextDouble() * (max-min);
+		double rand = min + (new Random().nextDouble() * (max-min));
 
 		// simulation for a cart and a pole
 		double force = FORCE_MAG * (command + rand); //command == 1 ? FORCE_MAG : -FORCE_MAG;

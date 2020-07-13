@@ -24,6 +24,7 @@ docker tag %image_name% %container_registry%.azurecr.io/%image_name%:latest
 docker push %container_registry%.azurecr.io/%image_name%:latest
 
 ECHO Complete
+exit /B 0
 
 :usage
 @echo Usage: %0 ^<docker_image_name^> ^<container_registry_name^>

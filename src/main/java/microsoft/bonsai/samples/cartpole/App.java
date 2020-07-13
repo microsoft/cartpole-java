@@ -115,11 +115,12 @@ public class App {
                     // now check the type of event and handle accordingly
 
                     if (event.type() == EventType.EPISODE_START) {
-                        // ignored event in Cartpole
+                        
                         Config config = new Config();
 
-                        // If you have config values, pass them to the start event on your model:
-                            // model.start(event.episodeStart().config());
+                        // use event.episodeStart().config() to obtain values (not used in Cartpole)
+
+                       model.start(config);
 
                     } else if (event.type() == EventType.EPISODE_STEP) {
                         Action action = new Action();
