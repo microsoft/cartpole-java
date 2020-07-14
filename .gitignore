@@ -1,3 +1,4 @@
 # Distribution / packaging
+.vscode/
 target/
 docker/lib/

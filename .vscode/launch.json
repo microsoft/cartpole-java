@@ -9,7 +9,7 @@
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"
-            // ,"args":"predict"
+            //,"args":"predict http://<url>/v1/prediction"
         },
         {
             "type": "java",

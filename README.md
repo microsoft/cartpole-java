@@ -78,7 +78,7 @@ sim_interface.withTimeout(60.0);
 sim_interface.withCapabilities(null);
 
 // minimum required
-sim_interface.withSimulatorContext("{}");
+sim_interface.withSimulatorContext(bcConfig.simulatorContext);
 
 //create only returns an object, so we need to check what type of object
 Object registrationResponse = sessions.create(workspaceName, sim_interface);
@@ -135,7 +135,8 @@ else if (response.getClass() == Event.class) {
         Config config = new Config();
 
         // If you have config values, pass them to the start event on your model:
-            // model.start(event.episodeStart().config());
+        //event.episodeStart().config()
+        model.start(config);
 
     } else if (event.type() == EventType.EPISODE_STEP) {
         Action action = new Action();
@@ -181,7 +182,7 @@ java -jar target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar
 If you want to run in prediction, run:
 
 ```
-java -jar target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar predict
+java -jar target\microsoft.bonsai.samples.cartpole-1.0-jar-with-dependencies.jar predict <URL>
 ```
 
 # Containerize
