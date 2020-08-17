@@ -1,11 +1,11 @@
-package microsoft.bonsai.samples.cartpole;
-
+package com.microsoft.bonsai.simulatorapi.samples.cartpole;
 
 import java.util.LinkedHashMap;
 
-import microsoft.bonsai.simulatorapi.*;
-import microsoft.bonsai.client.*;
-import microsoft.bonsai.simulatorapi.models.*;
+import com.microsoft.bonsai.client.*;
+import com.microsoft.bonsai.generated.Sessions;
+import com.microsoft.bonsai.generated.models.*;
+
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
@@ -58,7 +58,8 @@ public class App {
             if (registered == null) {
                 Sessions sessions = client.sessions();
 
-                SimulatorInterface sim_interface = new SimulatorInterface();
+                SimulatorInterface  sim_interface = new SimulatorInterface();
+             
                 sim_interface.withName("Cartpole-Java");
                 sim_interface.withTimeout(60.0);
                 sim_interface.withCapabilities(null);

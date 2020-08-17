@@ -1,4 +1,4 @@
-package microsoft.bonsai.samples.cartpole;
+package com.microsoft.bonsai.simulatorapi.samples.cartpole;
 
 /**
  * The State class maps to the state values in inkling. 

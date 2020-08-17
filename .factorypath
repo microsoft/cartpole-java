@@ -29,5 +29,5 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/jr/jackson-jr-objects/2.10.1/jackson-jr-objects-2.10.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.10.1/jackson-core-2.10.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/slf4j/slf4j-simple/1.7.29/slf4j-simple-1.7.29.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="M2_REPO/microsoft/bonsai/bonsai-sdk/1.0/bonsai-sdk-1.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/com/microsoft/bonsai/simulatorapi/bonsai-sdk/0.1.0/bonsai-sdk-0.1.0.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>microsoft.bonsai.samples</groupId>
-  <artifactId>microsoft.bonsai.samples.cartpole</artifactId>
+  <groupId>com.microsoft.bonsai.simulatorapi.samples</groupId>
+  <artifactId>cartpole</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
-  <name>microsoft.bonsai.samples.cartpole</name>
+  <name>cartpole</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -43,9 +43,9 @@
 
     <!-- bonsai reference -->
     <dependency>
-        <groupId>microsoft.bonsai</groupId>
+        <groupId>com.microsoft.bonsai.simulatorapi</groupId>
         <artifactId>bonsai-sdk</artifactId>
-        <version>1.0</version>
+        <version>0.1.0</version>
         <scope>compile</scope>
       </dependency>
   </dependencies>
@@ -67,7 +67,7 @@
      </descriptorRefs>
      <archive>
       <manifest>
-       <mainClass>microsoft.bonsai.samples.cartpole.App</mainClass>
+       <mainClass>com.microsoft.bonsai.simulatorapi.samples.cartpole.App</mainClass>
       </manifest>
      </archive>
     </configuration>

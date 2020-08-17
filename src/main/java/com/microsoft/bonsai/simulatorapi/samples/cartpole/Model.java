@@ -1,4 +1,4 @@
-package microsoft.bonsai.samples.cartpole;
+package com.microsoft.bonsai.simulatorapi.samples.cartpole;
 
 import java.util.Random;
 
