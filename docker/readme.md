@@ -10,7 +10,7 @@ where
 
 - <ACR_NAME> is container registry name
 - <DOCKER_IMAGE_NAME> is the name of your docker image
-- <VERSION> (optional) is the version name. Will default to **latest** if not specified
+- \<VERSION\> (optional) is the version name. Will default to **latest** if not specified
 
 # Run Docker Image
 
